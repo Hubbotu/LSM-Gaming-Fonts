@@ -1,0 +1,14 @@
+## Interface: 120000, 120001
+## Title: Gaming Fonts (LibSharedMedia)
+## Title-ruRU: Игровые Шрифты (LibSharedMedia)
+## Version: 1.0
+## Notes: A set of gaming fonts with Cyrillic support
+## Notes-ruRU: Набор игровых шрифтов с поддержкой кириллицы
+## IconTexture: Interface\AddOns\ZamestoTV_Win11FontsLSM\Icons\goblin
+
+## Category-enUS: Addons ZamestoTV
+## Category-ruRU: Аддоны ZamestoTV
+
+libs\LibSharedMedia-3.0\lib.xml
+Core.lua
+localization.lua
