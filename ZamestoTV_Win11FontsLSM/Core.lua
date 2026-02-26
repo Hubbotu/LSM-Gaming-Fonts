@@ -1,10 +1,4 @@
-local LSM = LibStub("LibSharedMedia-3.0", true)
-if not LSM then
-    print("|cffff0000Ошибка:|r Библиотека LibSharedMedia-3.0 не найдена!")
-    return
-end
-
-local ADDON_NAME = "ZamestoTV_Win11FontsLSM"
+local ADDON_NAME = ...
 local fontPath   = "Interface\\AddOns\\" .. ADDON_NAME .. "\\Fonts\\"
 
 local customFonts = {
@@ -17,29 +11,42 @@ local customFonts = {
 }
 
 local blizzardFonts = {
-    ["Blizzard: Friz Quadrata"] = [[Fonts\FRIZQT__.TTF]],
-    ["Blizzard: Arial Narrow"]  = [[Fonts\ARIALN.TTF]],
-    ["Blizzard: Morpheus"]      = [[Fonts\MORPHEUS.ttf]],
-    ["Blizzard: Skurri"]        = [[Fonts\skurri.ttf]],
-    ["Blizzard: Koki"]          = [[Fonts\KOKI.ttf]],
-    ["Blizzard: LifeVessel"]    = [[Fonts\LifeVessel.ttf]],
+    ["Blizzard: Friz Quadrata"] = "Fonts\\FRIZQT__.TTF",
+    ["Blizzard: Arial Narrow"]  = "Fonts\\ARIALN.TTF",
+    ["Blizzard: Morpheus"]      = "Fonts\\MORPHEUS.ttf",
+    ["Blizzard: Skurri"]        = "Fonts\\skurri.ttf",
+    ["Blizzard: Koki"]          = "Fonts\\KOKI.ttf",
+    ["Blizzard: LifeVessel"]    = "Fonts\\LifeVessel.ttf",
 }
 
-local customLoaded = 0
-for _ in pairs(customFonts) do
-    customLoaded = customLoaded + 1
+local function RegisterFonts()
+    local LSM = LibStub and LibStub:GetLibrary("LibSharedMedia-3.0", true)
+    if not LSM then
+        print("|cffff0000"..ADDON_NAME..": LibSharedMedia-3.0 not found.|r")
+        return
+    end
+
+    local countCustom = 0
+    local countBlizz  = 0
+
+    for name, path in pairs(customFonts) do
+        LSM:Register("font", name, path)
+        countCustom = countCustom + 1
+    end
+
+    for name, path in pairs(blizzardFonts) do
+        LSM:Register("font", name, path)
+        countBlizz = countBlizz + 1
+    end
+
+    print("|cff00ff00"..ADDON_NAME.."|r: Registered "
+        ..countCustom.." custom + "
+        ..countBlizz.." Blizzard fonts.")
 end
 
-for name, path in pairs(customFonts) do
-    LSM:Register("font", name, path)
-end
-for name, path in pairs(blizzardFonts) do
-    LSM:Register("font", name, path)
-end
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_LOGIN")
 
-local L = _G[ADDON_NAME .. "_L"]
-if L then
-    print(L("REGISTERED_USER_FONTS", ADDON_NAME, customLoaded))
-else
-    print("|cff00ff00" .. ADDON_NAME .. "|r: registered " .. customLoaded .. " custom fonts + standard Blizzard")
-end
+frame:SetScript("OnEvent", function()
+    RegisterFonts()
+end)
